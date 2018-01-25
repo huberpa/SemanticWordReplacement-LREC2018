@@ -46,7 +46,6 @@ replacement_count = int(options.replacement_count)
 # Class Definition
 ##############################################
 class SubstitutionProcess:
-
 	def __init__(self, posTagger, filePath, saveExtension, loadExtension, plainExtension, contextLength, replacementFrame, replacementFrameExtensions, replacementCount):
 		self.posTagger_Model = posTagger + "/models/english-bidirectional-distsim.tagger"
 		self.posTagger_Jar = posTagger + "/stanford-postagger.jar"
@@ -76,7 +75,6 @@ class SubstitutionProcess:
 			raw_input = word_tokenize(open(self.plainPath,"r").read().decode('utf-8'))
 			with open(self.filePath+"/Tokenized_Data.txt",'w') as f:
 				json.dump(raw_input, f)
-
 		data  = open(self.filePath+"/Tokenized_Data.txt",'r')
 		return data
 
@@ -168,26 +166,19 @@ class SubstitutionProcess:
 		frame = self.replacementFrame
 		found = 0
 		while found < self.replacementFrameExtensions:
-			
 			onlyWord = []
 			for word in wordsInOrder[wordIndex-frame:wordIndex+frame]:
 				onlyWord.append(word[0])
-			
 			# Get the tags of all the words in the FRAME around the word to change
 			taggedWordsInOrder = self.tagData(onlyWord, 20)
-
 			for item in taggedWordsInOrder: 
-
 				# Check the words for the exactly same tag and check that they are not the exactly same word
 				if item[1] == word_to_compare[0][1] and item[0] != word_to_compare[0][0]:
-					
 					#Safe all the words in the frame that have the right tag
 					nearestWords.append(item[0])
 					found = 3
-
 			frame *= 2
 			found += 1
-
 			# For all the possible interchange words with the right tag
 			if len(nearestWords) > 0:
 				substitute_Word = nearestWords[random.randint(0, len(nearestWords) - 1)]
@@ -196,7 +187,6 @@ class SubstitutionProcess:
 						substitute_Word = word
 				if len(substitute_Word) < 3:
 						substitute_Word = word
-
 		return substitute_Word
 
 	def createOutputs(self, replace_Words, changedTokens, changedTokensSync, changedTokensIndicated, replaceTracker):
@@ -212,7 +202,6 @@ class SubstitutionProcess:
 					changedTokensSync[new_token[0]] = tokens[new_token[0]] + "___" + new_token[1][0]
 					changedTokensIndicated[new_token[0]] = "___"+ new_token[1][0] +"___"
 					replaceTracker.append([new_token[0], tokens[new_token[0]], new_token[1][0]])
-
 		return changedTokens, changedTokensSync, changedTokensIndicated, replaceTracker
 ##############################################
 
